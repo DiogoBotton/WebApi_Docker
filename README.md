@@ -29,7 +29,7 @@ https://docs.docker.com/docker-for-windows/install/
 
 ## Para executar esta aplicação no seu pc será preciso:
 * Ter o Docker Desktop para Windows instalado no seu pc
-* Abrir o projeto no Visual Studio, abrir o Console de Gerenciador de Pacotes e digitar o comando abaixo:
+* Abrir o projeto no Visual Studio, abrir o Console de Gerenciador de Pacotes e digitar o comando abaixo caso não exista a pasta "Migrations":
 
 ### `add-migration NomeDaMigration`
 
