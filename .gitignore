@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Adicionado
+[Dd]ebug/**
+[Bb]in/**
+[Oo]bj/**
+[Mm]igrations/**
+[Mm]igrations/
+[Ww]wwroot/**
+
 # User-specific files
 *.rsuser
 *.suo
