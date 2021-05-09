@@ -1,0 +1,18 @@
+#Build: docker-compose build
+#Iniciar: docker-compose up -d (Cria e roda todos os containers)
+#Parar: docker-compose stop
+version: "3.9"
+services:
+    DockerDb:
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
+        environment:
+            SA_PASSWORD: "Legoshi@123"
+            ACCEPT_EULA: "Y"
+    webapi:
+        #Apontando para o nome da pasta que contem o arquivo Dockerfile
+        build: ./WebApi.Docker.Backend/
+        ports:
+            - "8000:80"
+        #Referenciar o nome do serviço que a API será dependente, no caso o DockerDb (linha 4)
+        depends_on:
+            - DockerDb
