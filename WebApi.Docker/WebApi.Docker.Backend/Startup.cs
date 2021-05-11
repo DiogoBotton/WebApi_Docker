@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApi.Docker.Backend.Domain.AggregateModels.UsuarioAggregate;
+using WebApi.Docker.Backend.Helpers;
 using WebApi.Docker.Backend.Infraestructure.Contexts;
 using WebApi.Docker.Backend.Infraestructure.Repositories;
 

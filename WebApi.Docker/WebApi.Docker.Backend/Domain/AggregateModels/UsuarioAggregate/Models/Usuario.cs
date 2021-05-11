@@ -17,5 +17,12 @@ namespace WebApi.Docker.Backend.Domain.AggregateModels.UsuarioAggregate.Models
             this.Email = email;
             this.Senha = senha;
         }
+
+        public void AlterarDados(string nome, string email, string senha)
+        {
+            this.Nome = nome;
+            this.Email = email;
+            this.Senha = senha;
+        }
     }
 }

@@ -43,5 +43,10 @@ namespace WebApi.Docker.Backend.Infraestructure.Repositories
         {
             return _ctx.Remove(usuario).Entity;
         }
+
+        public Usuario GetById(int id)
+        {
+            return _ctx.Usuarios.FirstOrDefault(x => x.Id == id);
+        }
     }
 }

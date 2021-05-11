@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Docker.Backend.Domain.AggregateModels.UsuarioAggregate.Models;
+using WebApi.Docker.Backend.Infraestructure.Contexts;
 
-namespace WebApi.Docker.Backend.Infraestructure.Contexts
+namespace WebApi.Docker.Backend.Helpers
 {
     public static class PrepareDB
     {

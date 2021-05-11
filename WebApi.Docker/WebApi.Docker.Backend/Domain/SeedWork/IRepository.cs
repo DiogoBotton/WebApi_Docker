@@ -9,5 +9,6 @@ namespace WebApi.Docker.Backend.Domain.SeedWork
     {
         IUnitOfWork UnitOfWork { get; }
         T Create(T objeto);
+        T GetById(int id);
     }
 }
