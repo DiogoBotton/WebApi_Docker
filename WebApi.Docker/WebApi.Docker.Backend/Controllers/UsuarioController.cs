@@ -110,8 +110,8 @@ namespace WebApi.DockerDB.SqlServer.Controllers
                     return StatusCode((int)HttpStatusCode.NotFound, "Este usuário não existe para ser alterado.");
 
                 // Caso o usuário seja o que foi criado por padrão na inicialização da API
-                if (usuarioDb.Email == "diogo@email.com")
-                    return StatusCode((int)HttpStatusCode.Forbidden, "Você não pode alterar o usuário padrão.");
+                if (usuarioDb.Email == "admin@email.com")
+                    return StatusCode((int)HttpStatusCode.Forbidden, "Você não pode alterar o usuário admin padrão.");
 
                 usuarioDb.AlterarDados(input.Nome, input.Email, input.Senha);
 
@@ -140,8 +140,8 @@ namespace WebApi.DockerDB.SqlServer.Controllers
                     return StatusCode((int)HttpStatusCode.NotFound, "Este usuário não existe.");
 
                 // Caso o usuário seja o que foi criado por padrão na inicialização da API
-                if (usuarioDb.Email == "diogo@email.com")
-                    return StatusCode((int)HttpStatusCode.Forbidden, "Você não pode excluir o usuário padrão.");
+                if (usuarioDb.Email == "admin@email.com")
+                    return StatusCode((int)HttpStatusCode.Forbidden, "Você não pode excluir o usuário admin padrão.");
 
                 _usuarioRepository.DeleteUsuario(usuarioDb);
 

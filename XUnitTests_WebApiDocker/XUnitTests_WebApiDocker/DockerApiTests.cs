@@ -17,9 +17,11 @@ namespace XUnitTests_WebApiDocker
             _client = new HttpClient();
         }
 
+        // IMPORTANTE: Os testes, por padrão, serão executados em ordem alfabética, caso haja necessidade de ordenar os testes, certificar que os NOMES dos métodos correspondem a ordem desejada
+
         // Fact é usado para definir que o método abaixo será de testes
         [Fact(DisplayName = "Criação de usuário (POST)")]
-        public async void Post_CreateUsuario_Return_OK()
+        public async void A_Post_CreateUsuario_Return_OK()
         {
             // Arrange -> É onde está a preparação para fazer o teste (declaração de variaveis, objetos, etc)
             Uri uri = new Uri("http://localhost:8000/api/Usuario");
@@ -44,7 +46,7 @@ namespace XUnitTests_WebApiDocker
         }
 
         [Fact(DisplayName = "Retornar todos os usuarios (GET)")]
-        public async void Get_GetAllUsuarios_Return_Usuarios()
+        public async void B_Get_GetAllUsuarios_Return_Usuarios()
         {
             // Arrange
             Uri uri = new Uri("http://localhost:8000/api/Usuario/all-users");
@@ -59,8 +61,8 @@ namespace XUnitTests_WebApiDocker
         // Theory utilizado para testes parametrizados
         [Theory(DisplayName = "Retornando um usuário existente por email (GET)")]
         // Enviar parametros via atributo InlineData
-        [InlineData("diogo@email.com")]
-        public async void Get_GetUsuarioByEmail_Return_Usuario(string email)
+        [InlineData("admin@email.com")]
+        public async void C_Get_GetUsuarioByEmail_Return_Usuario(string email)
         {
             // Arrange
             Uri uri = new Uri($"http://localhost:8000/api/Usuario/email/{email}");
@@ -74,7 +76,7 @@ namespace XUnitTests_WebApiDocker
 
         [Theory(DisplayName = "Retornando um usuário NÃO existente por email (GET)")]
         [InlineData("nãoexiste@email.com")]
-        public async void Get_GetUsuarioByEmail_Return_NotFound(string email)
+        public async void D_Get_GetUsuarioByEmail_Return_NotFound(string email)
         {
             // Arrange
             Uri uri = new Uri($"http://localhost:8000/api/Usuario/email/{email}");
@@ -86,27 +88,23 @@ namespace XUnitTests_WebApiDocker
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+        // Este é a única "falha" da aplicação, mas ele falha pois os testes não são feitos de forma ordenada
+        // Neste caso, 2 testes são feitos com esse usuário específico, Update e Delete, mas o Delete de alguma forma ocorre antes do Update (mesmo com o método delete sendo os últimos métodos da classe)
+        // Solução: Ordenar os testes a partir dos nomes dos métodos
         [Fact(DisplayName = "Alteração de usuário")]
-        public async void Post_AlterUsuario_Return_OK()
+        public async void E_Post_AlterUsuario_Return_OK()
         {
             // Arrange
-            Uri uriGet = new Uri("http://localhost:8000/api/Usuario/email/fulano@email.com");
 
-            // Busca usuário por email que será editado na API
-            string responseGet = await _client.GetStringAsync(uriGet);
-
-            // Desserializa o objeto JSON transformando em um ViewModel específico
-            var usuario = JsonConvert.DeserializeObject<UsuarioViewModel>(responseGet);
-
-            // Cria Uri com o id do usuario retornado
-            Uri uriAlter = new Uri($"http://localhost:8000/api/Usuario/alter-user/{usuario.Id}");
+            // Cria Uri com o id do usuario (para não depender de outros métodos, será adicionado diretamente o ID do usuário no BD)
+            Uri uriAlter = new Uri("http://localhost:8000/api/Usuario/alter-user/2");
 
             // Edita usuário
             var Usuario = new
             {
-                Nome = usuario.Nome + " EDITADO :)",
-                Email = usuario.Email,
-                Senha = "fulano1234"
+                Nome = "Diogo" + " EDITADO :)",
+                Email = "diogo@email.com",
+                Senha = "diogo1234"
             };
 
             // Transforma objeto usuario em JSON (string)
@@ -122,26 +120,19 @@ namespace XUnitTests_WebApiDocker
         }
 
         [Fact(DisplayName = "Alteração de usuário proibido")]
-        public async void Post_CreateUsuario_Return_Forbidden()
+        public async void F_Post_CreateUsuario_Return_Forbidden()
         {
             // Arrange
-            Uri uriGet = new Uri("http://localhost:8000/api/Usuario/email/diogo@email.com");
 
-            // Busca usuário por email que será editado na API
-            string responseGet = await _client.GetStringAsync(uriGet);
-
-            // Desserializa o objeto JSON transformando em um ViewModel específico
-            var usuario = JsonConvert.DeserializeObject<UsuarioViewModel>(responseGet);
-
-            // Cria Uri com o id do usuario retornado
-            Uri uriAlter = new Uri($"http://localhost:8000/api/Usuario/alter-user/{usuario.Id}");
+            // Cria Uri com o id do usuario admin padrão (id 1)
+            Uri uriAlter = new Uri("http://localhost:8000/api/Usuario/alter-user/1");
 
             // Edita usuário
             var Usuario = new
             {
-                Nome = usuario.Nome + " EDITADO :)",
-                Email = usuario.Email,
-                Senha = "diogo1234"
+                Nome = "Admin" + " EDITADO :)",
+                Email = "naovaidanao@email.com",
+                Senha = "admin1234"
             };
 
             // Transforma objeto usuario em JSON (string)
@@ -157,19 +148,12 @@ namespace XUnitTests_WebApiDocker
         }
 
         [Fact(DisplayName = "Deletar usuário")]
-        public async void Post_DeleteUsuario_Return_OK()
+        public async void G_Post_DeleteUsuario_Return_OK()
         {
             // Arrange
-            Uri uriGet = new Uri("http://localhost:8000/api/Usuario/email/fulano@email.com");
 
-            // Busca usuário por email que será excluido na API
-            string responseGet = await _client.GetStringAsync(uriGet);
-
-            // Desserializa o objeto JSON transformando em um ViewModel específico
-            var usuario = JsonConvert.DeserializeObject<UsuarioViewModel>(responseGet);
-
-            // Cria Uri com o id do usuario retornado
-            Uri uriDel = new Uri($"http://localhost:8000/api/Usuario/delete/{usuario.Id}");
+            // Cria Uri com o id do usuario que será excluido (id 2)
+            Uri uriDel = new Uri("http://localhost:8000/api/Usuario/delete/2");
 
             // Act
             HttpResponseMessage responseAlter = await _client.DeleteAsync(uriDel);
@@ -179,19 +163,12 @@ namespace XUnitTests_WebApiDocker
         }
 
         [Fact(DisplayName = "Deletar usuário proibido")]
-        public async void Post_DeleteUsuario_Return_Forbidden()
+        public async void H_Post_DeleteUsuario_Return_Forbidden()
         {
             // Arrange
-            Uri uriGet = new Uri("http://localhost:8000/api/Usuario/email/diogo@email.com");
 
-            // Busca usuário por email que será excluido na API
-            string responseGet = await _client.GetStringAsync(uriGet);
-
-            // Desserializa o objeto JSON transformando em um ViewModel específico
-            var usuario = JsonConvert.DeserializeObject<UsuarioViewModel>(responseGet);
-
-            // Cria Uri com o id do usuario retornado
-            Uri uriDel = new Uri($"http://localhost:8000/api/Usuario/delete/{usuario.Id}");
+            // Cria Uri com o id do usuario que não poderá ser excluido (id 1, admin)
+            Uri uriDel = new Uri("http://localhost:8000/api/Usuario/delete/1");
 
             // Act
             HttpResponseMessage responseDel = await _client.DeleteAsync(uriDel);

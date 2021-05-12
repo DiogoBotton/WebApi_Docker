@@ -31,7 +31,10 @@ namespace WebApi.Docker.Backend.Helpers
             // Caso não houver nenhum usuário cadastrado, cadastra um por padrão
             if (!ctx.Usuarios.Any())
             {
-                ctx.Usuarios.Add(new Usuario("Diogo", "diogo@email.com", "diogo123"));
+                ctx.Usuarios.AddRange(new List<Usuario>(){
+                    new Usuario("Admin Padrão", "admin@email.com", "admin123"),
+                    new Usuario("Diogo", "diogo@email.com", "diogo123")
+                });
                 ctx.SaveChanges();
             }
         }
